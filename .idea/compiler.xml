@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="18_11_11_RentCompanyServerTcpApplJson" />
+        <module name="18_11_11_RentCompanyWebService" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="18_11_11_RentCompanyServerTcpApplJson" target="1.5" />
+      <module name="18_11_11_RentCompanyWebService" target="1.8" />
+      <module name="18_11_11_TcpStrings" target="1.8" />
+      <module name="18_11_11_TcpStrings1" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
