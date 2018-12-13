@@ -17,9 +17,9 @@ public class RentRecordsJpa
     @Column(name = "car_number")
     private String carNumber;*/
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private CarJpa car;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private DriverJpa driver;
     @Column(name = "rent_date")
     private LocalDate rentDate;
