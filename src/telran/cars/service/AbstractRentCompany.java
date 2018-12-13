@@ -18,7 +18,7 @@ public abstract class AbstractRentCompany implements IRentCompany {
     }
 
 
-    protected float getCost(Model model, RentRecord record, int gasTankPercent, LocalDate returnDate) {
+    protected float getCost(ModelDto model, RentRecordDto record, int gasTankPercent, LocalDate returnDate) {
         float cost = 0;
         int priceDay = model.getPriceDay();
         int gasTank = model.getGasTank();

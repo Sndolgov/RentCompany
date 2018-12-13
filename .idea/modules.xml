@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/18_11_11_RentCompanyWebService.iml" filepath="$PROJECT_DIR$/18_11_11_RentCompanyWebService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../18_11_28_AccountingManagementService/accounting.iml" filepath="$PROJECT_DIR$/../18_11_28_AccountingManagementService/accounting.iml" />
     </modules>
   </component>
 </project>

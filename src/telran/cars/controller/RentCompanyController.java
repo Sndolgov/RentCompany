@@ -3,7 +3,6 @@ package telran.cars.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
-import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.web.bind.annotation.*;
 import telran.cars.dto.*;
@@ -12,7 +11,6 @@ import telran.cars.service.RentCompanyEmbedded;
 import telran.cars.utils.Persistable;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,72 +63,72 @@ public class RentCompanyController {
 
 
     @PostMapping(ADD_MODEL)
-    public CarsReturnCode addModel(@RequestBody Model model) {
+    public CarsReturnCode addModel(@RequestBody ModelDto model) {
         return company.addModel(model);
     }
 
     @PostMapping(ADD_CAR)
-    public CarsReturnCode addCar(@RequestBody Car car) {
+    public CarsReturnCode addCar(@RequestBody CarDto car) {
         return company.addCar(car);
     }
 
     @PostMapping(ADD_DRIVER)
-    public CarsReturnCode addDriver(@RequestBody Driver driver) {
+    public CarsReturnCode addDriver(@RequestBody DriverDto driver) {
         return company.addDriver(driver);
     }
 
-    @GetMapping(GET_MODEL + "/{modelName}")
-    public Model getModel(@PathVariable("modelName") String modelName) {
+    @GetMapping(GET_MODEL)
+    public ModelDto getModel(@RequestParam("modelName") String modelName) {
         return company.getModel(modelName);
     }
 
-    @GetMapping(GET_CAR + "/{carNumber}")
-    public Car getCar(@PathVariable("carNumber") String carNumber) {
+    @GetMapping(GET_CAR)
+    public CarDto getCar(@RequestParam("carNumber") String carNumber) {
         return company.getCar(carNumber);
     }
 
-    @GetMapping(GET_DRIVER + "/{licenseId}")
-    public Driver getDriver(@PathVariable("licenseId") long licenseId) {
+    @GetMapping(GET_DRIVER)
+    public DriverDto getDriver(@RequestParam("licenseId") long licenseId) {
         return company.getDriver(licenseId);
     }
 
     @PostMapping(RENT_CAR)
-    public CarsReturnCode rentCar(@RequestBody RentRecord record) {
+    public CarsReturnCode rentCar(@RequestBody RentRecordDto record) {
         return company.rentCar(record.getCarNumber(), record.getLicenseId(), record.getRentDate(), record.getRentDays());
     }
 
     @PostMapping(RETURN_CAR)
-    public CarsReturnCode returnCar(@RequestBody RentRecord record) {
+    public CarsReturnCode returnCar(@RequestBody RentRecordDto record) {
         return company.returnCar(record.getCarNumber(), record.getReturnDate(), record.getGasTankPercent(), record.getDamages());
     }
 
     @PostMapping(CLEAR)
-    public List<Car> clear(@RequestBody DateAndDays dateAndDays) {
+    public List<CarDto> clear(@RequestBody DateAndDays dateAndDays) {
         return company.clear(dateAndDays.getLocalDate(), dateAndDays.getDays());
     }
 
-    @GetMapping(GET_CAR_DRIVERS + "/{carNumber}")
-    public List<Driver> getCarDrivers(@PathVariable("carNumber") String carNumber) {
+    @GetMapping(GET_CAR_DRIVERS)
+    public List<DriverDto> getCarDrivers(@RequestParam("carNumber") String carNumber) {
         return company.getCarDrivers(carNumber);
     }
 
-    @GetMapping(GET_DRIVER_CARS + "/{licenseId}")
-    public List<Car> getDriverCars(@PathVariable("licenseId") long licenseId) {
+    @GetMapping(GET_DRIVER_CARS)
+    public List<CarDto> getDriverCars(@RequestParam("licenseId") long licenseId) {
         return company.getDriverCars(licenseId);
     }
 
     @GetMapping(GET_ALL_RECORDS)
-    public List<RentRecord> getAllRecords() {
+    public List<RentRecordDto> getAllRecords() {
         return company.getAllRecords().collect(Collectors.toList());
     }
 
     @GetMapping(GET_ALL_CARS)
-    public List<Car> getAllCars() {
+    public List<CarDto> getAllCars() {
         return company.getAllCars().collect(Collectors.toList());
     }
 
     @GetMapping(GET_ALL_DRIVERS)
-    public List<Driver> getAllDrivers() {
+    public List<DriverDto> getAllDrivers() {
         return company.getAllDrivers().collect(Collectors.toList());
     }
 
@@ -144,8 +142,8 @@ public class RentCompanyController {
         return company.getMostPopularModelNames();
     }
 
-    @GetMapping(GET_MODEL_PROFIT + "/{modelName}")
-    public double getModelProfit(@PathVariable("modelName") String modelName) {
+    @GetMapping(GET_MODEL_PROFIT)
+    public double getModelProfit(@RequestParam("modelName") String modelName) {
         return company.getModelProfit(modelName);
     }
 
@@ -166,12 +164,12 @@ public class RentCompanyController {
     }
 
     @PostMapping(GET_RETURNED_RECORDS)
-    public List<RentRecord> getReturnedRecords(@RequestBody DatesFromTo datesFromTo) {
+    public List<RentRecordDto> getReturnedRecords(@RequestBody DatesFromTo datesFromTo) {
         return company.getReturnedRecords(datesFromTo.getFrom(), datesFromTo.getTo()).collect(Collectors.toList());
     }
 
-    @DeleteMapping(REMOVE_CAR+"/{carNumber}")
-    public CarsReturnCode removeCar(@PathVariable("carNumber") String carNumber) {
+    @DeleteMapping(REMOVE_CAR)
+    public CarsReturnCode removeCar(@RequestParam("carNumber") String carNumber) {
         return company.removeCar(carNumber);
     }
 }

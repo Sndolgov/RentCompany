@@ -12,12 +12,12 @@ public interface IRentCompany {
 	int getGasPrice();
 	void setGasPrice(int gasPrice);
 
-	CarsReturnCode addModel(Model model);//(OK,MODEL_EXISTS)
-	CarsReturnCode addCar(Car car);//(OK,CAR_EXISTS,NO_MODEL)
-	CarsReturnCode addDriver(Driver driver);//(OK,DRIVER_EXISTS)
-	Model getModel(String modelName);
-	Car getCar(String carNumber);
-	Driver getDriver(long licenseId);
+	CarsReturnCode addModel(ModelDto model);//(OK,MODEL_EXISTS)
+	CarsReturnCode addCar(CarDto car);//(OK,CAR_EXISTS,NO_MODEL)
+	CarsReturnCode addDriver(DriverDto driver);//(OK,DRIVER_EXISTS)
+	ModelDto getModel(String modelName);
+	CarDto getCar(String carNumber);
+	DriverDto getDriver(long licenseId);
 	CarsReturnCode rentCar(String carNumber, long licenseId,
                            LocalDate rentDate, int rentDays);//(OK,CAR_IN_USE,NO_CAR,NO_DRIVER)
 	    
@@ -31,18 +31,18 @@ public interface IRentCompany {
 
 
 
-	List<Car> clear(LocalDate currentDate, int days);
+	List<CarDto> clear(LocalDate currentDate, int days);
 	//all cars for which the returnDate before currentDate - days with flRemoved=true
 	//are deleted from an information model along with all related records
 	//it returns list of the deleted cars
-	List<Driver> getCarDrivers(String carNumber); //returns
+	List<DriverDto> getCarDrivers(String carNumber); //returns
 	//all drivers that have been renting the car
-	List<Car> getDriverCars(long licenseId); //returns list of 
+	List<CarDto> getDriverCars(long licenseId); //returns list of
 	//all cars that have been rented by the driver
-	Stream<RentRecord> getAllRecords();
-	Stream <RentRecord> getReturnedRecords(LocalDate from, LocalDate to);
-	Stream<Car> getAllCars();
-	Stream<Driver> getAllDrivers();
+	Stream<RentRecordDto> getAllRecords();
+	Stream <RentRecordDto> getReturnedRecords(LocalDate from, LocalDate to);
+	Stream<CarDto> getAllCars();
+	Stream<DriverDto> getAllDrivers();
 	
 	List<String> getAllModelNames();
 	List<String> getMostPopularModelNames(); //returns list of

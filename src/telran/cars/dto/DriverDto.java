@@ -3,7 +3,7 @@ package telran.cars.dto;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class Driver implements Serializable {
+public class DriverDto implements Serializable {
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -23,7 +23,7 @@ public class Driver implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Driver other = (Driver) obj;
+        DriverDto other = (DriverDto) obj;
         if (birthYear != other.birthYear)
             return false;
         if (licenseId != other.licenseId)
@@ -46,7 +46,7 @@ public class Driver implements Serializable {
     private int birthYear;
     private String phone;
 
-    public Driver(long licenseId, String name, int birthYear, String phone) {
+    public DriverDto(long licenseId, String name, int birthYear, String phone) {
         super();
         this.licenseId = licenseId;
         this.name = name;
@@ -54,7 +54,7 @@ public class Driver implements Serializable {
         this.phone = phone;
     }
 
-    public Driver() {
+    public DriverDto() {
     }
 
     public long getLicenseId() {
@@ -63,7 +63,7 @@ public class Driver implements Serializable {
 
     @Override
     public String toString() {
-        return "Driver [licenseId=" + licenseId + ", name=" + name + ", birthYear=" + birthYear + ", phone=" + phone + "]";
+        return "DriverDto [licenseId=" + licenseId + ", name=" + name + ", birthYear=" + birthYear + ", phone=" + phone + "]";
     }
 
     public void setPhone(String phone) {

@@ -1,6 +1,5 @@
 package telran.cars.service;
 
-import org.springframework.stereotype.Service;
 import telran.cars.dto.*;
 import telran.cars.utils.Persistable;
 
@@ -19,27 +18,27 @@ import java.util.stream.Stream;
 public class RentCompanyEmbedded extends AbstractRentCompany implements Persistable {
 
 
-    private Map<String, Car> cars = new HashMap<>();
-    private Map<Long, Driver> drivers = new HashMap<>();
-    private Map<String, Model> models = new HashMap<>();
-    private Map<String, List<RentRecord>> carRecords = new HashMap<>();
-    private Map<Long, List<RentRecord>> driverRecords = new HashMap<>();
-    private TreeMap<LocalDate, List<RentRecord>> returnedRecords = new TreeMap<>();
+    private Map<String, CarDto> cars = new HashMap<>();
+    private Map<Long, DriverDto> drivers = new HashMap<>();
+    private Map<String, ModelDto> models = new HashMap<>();
+    private Map<String, List<RentRecordDto>> carRecords = new HashMap<>();
+    private Map<Long, List<RentRecordDto>> driverRecords = new HashMap<>();
+    private TreeMap<LocalDate, List<RentRecordDto>> returnedRecords = new TreeMap<>();
 
     @Override
-    public CarsReturnCode addModel(Model model) {
+    public CarsReturnCode addModel(ModelDto model) {
         if (model == null)
             throw new IllegalArgumentException("model is null");
         return models.putIfAbsent(model.getModelName(), model) == null ? CarsReturnCode.OK : CarsReturnCode.MODEL_EXISTS;
     }
 
     @Override
-    public Model getModel(String modelName) {
+    public ModelDto getModel(String modelName) {
         return models.get(modelName);
     }
 
     @Override
-    public CarsReturnCode addCar(Car car) {
+    public CarsReturnCode addCar(CarDto car) {
         if (car == null)
             throw new IllegalArgumentException("car is null");
         if (models.get(car.getModelName()) == null)
@@ -48,19 +47,19 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
     }
 
     @Override
-    public Car getCar(String carNumber) {
+    public CarDto getCar(String carNumber) {
         return cars.get(carNumber);
     }
 
     @Override
-    public CarsReturnCode addDriver(Driver driver) {
+    public CarsReturnCode addDriver(DriverDto driver) {
         if (driver == null)
             throw new IllegalArgumentException("driver is null");
         return drivers.putIfAbsent(driver.getLicenseId(), driver) == null ? CarsReturnCode.OK : CarsReturnCode.DRIVER_EXISTS;
     }
 
     @Override
-    public Driver getDriver(long licenseId) {
+    public DriverDto getDriver(long licenseId) {
         return drivers.get(licenseId);
     }
 
@@ -69,7 +68,7 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
         CarsReturnCode code = checkRentCar(carNumber, licenseId);
         if (code != CarsReturnCode.OK)
             return code;
-        RentRecord record = new RentRecord(licenseId, carNumber, rentDate, rentDays);
+        RentRecordDto record = new RentRecordDto(licenseId, carNumber, rentDate, rentDays);
         addRecordCarRecords(record);
         addRecordDriverRecords(record);
 
@@ -77,12 +76,12 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
         return CarsReturnCode.OK;
     }
 
-    private void addRecordDriverRecords(RentRecord record) {
+    private void addRecordDriverRecords(RentRecordDto record) {
         driverRecords.putIfAbsent(record.getLicenseId(), new ArrayList<>());
-        List<RentRecord> list = driverRecords.get(record.getLicenseId());
+        List<RentRecordDto> list = driverRecords.get(record.getLicenseId());
         list.add(record);
 
-      /*  List<RentRecord> list = new ArrayList<>();
+      /*  List<RentRecordDto> list = new ArrayList<>();
         list.add(record);
         driverRecords.merge(record.getLicenseId(), list, (oldV, newV) ->
         {
@@ -91,21 +90,21 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
         });*/
     }
 
-    private void addRecordCarRecords(RentRecord record) {
+    private void addRecordCarRecords(RentRecordDto record) {
         carRecords.putIfAbsent(record.getCarNumber(), new ArrayList<>());
-        List<RentRecord> list = carRecords.get(record.getCarNumber());
+        List<RentRecordDto> list = carRecords.get(record.getCarNumber());
         list.add(record);
 
         /*carRecords.merge(record.getCarNumber(), Collections.singletonList(record), (oldV, newV) ->
         {
-            List <RentRecord> list = new ArrayList<>(oldV);
+            List <RentRecordDto> list = new ArrayList<>(oldV);
             list.addAll(newV);
             return list;
         });*/
     }
 
     private CarsReturnCode checkRentCar(String carNumber, long licenseId) {
-        Car car = cars.get(carNumber);
+        CarDto car = cars.get(carNumber);
         if (car == null || car.isFlRemoved())
             return CarsReturnCode.NO_CAR;
         if (car.isInUse())
@@ -118,11 +117,11 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
     @Override
     public CarsReturnCode returnCar(String carNumber, LocalDate returnDate, int gasTankPercent, int damages) {
 
-        Car car = getCar(carNumber);
+        CarDto car = getCar(carNumber);
         if (car == null || !car.isInUse())
             return CarsReturnCode.CAR_NOT_RENTED;
 
-        RentRecord record = getRentRecordLast(carNumber);
+        RentRecordDto record = getRentRecordLast(carNumber);
         if (record.getRentDate().isAfter(returnDate))
             return CarsReturnCode.RETURN_DATE_WRONG;
 
@@ -133,35 +132,35 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
         return CarsReturnCode.OK;
     }
 
-    private RentRecord getRentRecordLast(String carNumber) {
-        List<RentRecord> records = carRecords.get(carNumber);
-        RentRecord record = null;
+    private RentRecordDto getRentRecordLast(String carNumber) {
+        List<RentRecordDto> records = carRecords.get(carNumber);
+        RentRecordDto record = null;
         if (records != null) {
             record = records.get(records.size() - 1);
         }
         return record;
     }
 
-    private void updateRecord(RentRecord record, LocalDate returnDate, int gasTankPercent, int damages) {
-        Car car = getCar(record.getCarNumber());
-        Model model = getModel(car.getModelName());
+    private void updateRecord(RentRecordDto record, LocalDate returnDate, int gasTankPercent, int damages) {
+        CarDto car = getCar(record.getCarNumber());
+        ModelDto model = getModel(car.getModelName());
         float cost = getCost(model, record, gasTankPercent, returnDate);
         setReturnFields(record, cost, returnDate, gasTankPercent, damages);
     }
 
-    private void setReturnFields(RentRecord record, float cost, LocalDate returnDate, int gasTankPercent, int damages) {
+    private void setReturnFields(RentRecordDto record, float cost, LocalDate returnDate, int gasTankPercent, int damages) {
         record.setCost(cost);
         record.setDamages(damages);
         record.setGasTankPercent(gasTankPercent);
         record.setReturnDate(returnDate);
     }
 
-    private void addRecordReturnedRecords(RentRecord record) {
+    private void addRecordReturnedRecords(RentRecordDto record) {
         returnedRecords.putIfAbsent(record.getReturnDate(), new ArrayList<>());
         returnedRecords.get(record.getReturnDate()).add(record);
     }
 
-    private void setCarDamages(Car car, int damages) {
+    private void setCarDamages(CarDto car, int damages) {
         if (damages == 0)
             return;
         if (damages > 0 && damages < 10)
@@ -175,7 +174,7 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
 
     @Override
     public CarsReturnCode removeCar(String carNumber) {
-        Car car = getCar(carNumber);
+        CarDto car = getCar(carNumber);
         if (car == null || car.isFlRemoved())
             return CarsReturnCode.NO_CAR;
         if (car.isInUse())
@@ -185,12 +184,12 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
     }
 
     @Override
-    public List<Car> clear(LocalDate currentDate, int days) {
+    public List<CarDto> clear(LocalDate currentDate, int days) {
         LocalDate removeDate = currentDate.minusDays(days);
 
-        NavigableMap<LocalDate, List<RentRecord>> recordsBefore = returnedRecords.headMap(removeDate, true);
+        NavigableMap<LocalDate, List<RentRecordDto>> recordsBefore = returnedRecords.headMap(removeDate, true);
 
-        List<RentRecord> records = recordsBefore.values().stream()
+        List<RentRecordDto> records = recordsBefore.values().stream()
                 .flatMap(List::stream
 
                 )
@@ -202,14 +201,14 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
 
         records.forEach(r -> addToSet(r, licenseId, regNumbers));
 
-        List<Car> carsForDelete = new ArrayList<>();
+        List<CarDto> carsForDelete = new ArrayList<>();
         regNumbers.forEach(n -> carsForDelete.add(cars.remove(n)));
 
         removeRecordsFromAllMap(licenseId, regNumbers);
         return carsForDelete;
     }
 
-    private void addToSet(RentRecord record, Set<Long> licenseId, Set<String> regNumbers) {
+    private void addToSet(RentRecordDto record, Set<Long> licenseId, Set<String> regNumbers) {
         licenseId.add(record.getLicenseId());
         regNumbers.add(record.getCarNumber());
     }
@@ -222,9 +221,9 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
 
     private void removeFromReturn(Set<String> regNumbers) {
 
-        Iterator<List<RentRecord>> iterator = returnedRecords.values().iterator();
+        Iterator<List<RentRecordDto>> iterator = returnedRecords.values().iterator();
         while (iterator.hasNext()) {
-            List<RentRecord> next = iterator.next();
+            List<RentRecordDto> next = iterator.next();
             next.removeIf(r -> regNumbers.contains(r.getCarNumber()));
             if (next.isEmpty())
                 iterator.remove();
@@ -246,8 +245,8 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
     }
 
     @Override
-    public List<Driver> getCarDrivers(String carNumber) {
-        List<RentRecord> records = carRecords.get(carNumber);
+    public List<DriverDto> getCarDrivers(String carNumber) {
+        List<RentRecordDto> records = carRecords.get(carNumber);
         if (records != null)
             return carRecords.get(carNumber).stream()
                     .map(r -> getDriver(r.getLicenseId()))
@@ -257,8 +256,8 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
     }
 
     @Override
-    public List<Car> getDriverCars(long licenseId) {
-        List<RentRecord> records = driverRecords.get(licenseId);
+    public List<CarDto> getDriverCars(long licenseId) {
+        List<RentRecordDto> records = driverRecords.get(licenseId);
         if (records != null)
             return records.stream()
                     .map(r -> getCar(r.getCarNumber()))
@@ -268,24 +267,24 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
     }
 
     @Override
-    public Stream<RentRecord> getAllRecords() {
+    public Stream<RentRecordDto> getAllRecords() {
         return carRecords.values().stream()
                 .flatMap(Collection::stream);
     }
 
     @Override
-    public Stream<RentRecord> getReturnedRecords(LocalDate from, LocalDate to) {
+    public Stream<RentRecordDto> getReturnedRecords(LocalDate from, LocalDate to) {
         return returnedRecords.subMap(from, to).values().stream().flatMap(List::stream);
     }
 
     @Override
-    public Stream<Car> getAllCars() {
+    public Stream<CarDto> getAllCars() {
         return cars.values().stream();
 
     }
 
     @Override
-    public Stream<Driver> getAllDrivers() {
+    public Stream<DriverDto> getAllDrivers() {
         return drivers.values().stream();
     }
 
@@ -314,13 +313,13 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
 
     @Override
     public double getModelProfit(String modelName) {
-        Model model = getModel(modelName);
+        ModelDto model = getModel(modelName);
         if (model == null)
             return -1;
         int priceDay = model.getPriceDay();
         Integer days = getAllRecords()
                 .filter(r -> getCar(r.getCarNumber()).getModelName().equals(modelName))
-                .mapToInt(RentRecord::getRentDays)
+                .mapToInt(RentRecordDto::getRentDays)
                 .sum();
 
         return days * priceDay;
@@ -343,7 +342,7 @@ public class RentCompanyEmbedded extends AbstractRentCompany implements Persista
         return models;
     }
 
-    private double getSum(RentRecord record) {
+    private double getSum(RentRecordDto record) {
         String modelName = getCar(record.getCarNumber()).getModelName();
         return getModel(modelName).getPriceDay() * record.getRentDays();
     }

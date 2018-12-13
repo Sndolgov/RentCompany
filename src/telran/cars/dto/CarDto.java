@@ -3,7 +3,7 @@ package telran.cars.dto;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class Car implements Serializable {
+public class CarDto implements Serializable {
     private String regNumber;
     private String color;
     private State state;
@@ -11,7 +11,7 @@ public class Car implements Serializable {
     private boolean inUse;
     private boolean flRemoved;
 
-    public Car(String regNumber, String color, String modelName) {
+    public CarDto(String regNumber, String color, String modelName) {
         super();
         this.regNumber = regNumber;
         this.color = color;
@@ -21,7 +21,7 @@ public class Car implements Serializable {
 
     @Override
     public String toString() {
-        return "Car [regNumber=" + regNumber + ", color=" + color + ", state=" + state + ", modelName=" + modelName
+        return "CarDto [regNumber=" + regNumber + ", color=" + color + ", state=" + state + ", modelName=" + modelName
                 + ", inUse=" + inUse + ", flRemoved=" + flRemoved + "]";
     }
 
@@ -61,7 +61,7 @@ public class Car implements Serializable {
         return modelName;
     }
 
-    public Car() {
+    public CarDto() {
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Car implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Car other = (Car) obj;
+        CarDto other = (CarDto) obj;
         if (color == null) {
             if (other.color != null)
                 return false;

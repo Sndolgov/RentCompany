@@ -1,1 +1,1 @@
-{"responseCode":"OK","responseData":"[{\"licenseId\":123,\"carNumber\":\"111\",\"rentDate\":\"2018-10-30\",\"returnDate\":\"2018-11-04\",\"gasTankPercent\":100,\"rentDays\":5,\"cost\":1100.0,\"damages\":0}]","className":"java.util.ArrayList","className2":"telran.cars.dto.RentRecord"}
+{"responseCode":"OK","responseData":"[{\"licenseId\":123,\"carNumber\":\"111\",\"rentDate\":\"2018-10-30\",\"returnDate\":\"2018-11-04\",\"gasTankPercent\":100,\"rentDays\":5,\"cost\":1100.0,\"damages\":0}]","className":"java.util.ArrayList","className2":"telran.cars.dto.RentRecordDto"}
