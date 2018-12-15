@@ -23,8 +23,8 @@ import static telran.cars.dto.RentCompanyApiConstants.*;
 @RestController
 @ManagedResource
 public class RentCompanyController {
-    @Value("${fileName:data}")
-    private String fileName;
+    /*@Value("${fileName:data}")
+    private String fileName;*/
     @Value("${finePercent:15}")
     private int finePercent;
     @Value("${gasPrice:10}")
@@ -152,7 +152,7 @@ public class RentCompanyController {
         return company.getMostProfitModelNames();
     }
 
-    @GetMapping(SAVE)
+    /*@GetMapping(SAVE)
     public void save() {
         if (company instanceof Persistable)
             ((Persistable) company).save(fileName);
@@ -161,7 +161,7 @@ public class RentCompanyController {
     @GetMapping(LOAD)
     public void load(){
         company= RentCompanyEmbedded.restoreFromFile(fileName);
-    }
+    }*/
 
     @PostMapping(GET_RETURNED_RECORDS)
     public List<RentRecordDto> getReturnedRecords(@RequestBody DatesFromTo datesFromTo) {

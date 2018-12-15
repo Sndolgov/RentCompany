@@ -14,7 +14,6 @@ import javax.annotation.PreDestroy;
  * Created by Сергей on 19.11.2018.
  */
 
-@Configuration
 public class RentCompanyConfigurator {
     @Value("${fileName}")
     private String fileName;
