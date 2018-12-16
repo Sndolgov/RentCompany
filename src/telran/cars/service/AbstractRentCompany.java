@@ -1,6 +1,7 @@
 package telran.cars.service;
 
 import telran.cars.dto.*;
+import telran.cars.entety.CarJpa;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -30,6 +31,16 @@ public abstract class AbstractRentCompany implements IRentCompany {
         if (gasTankPercent < 100)
             cost += (gasTank - gasTank * (double) gasTankPercent / 100) * getGasPrice();
         return cost;
+    }
+
+    public State setCarDamages(int damages) {
+        if (damages == 0)
+            return State.EXCELLENT;
+        if (damages > 0 && damages < 10)
+           return State.GOOD;
+        else {
+            return State.BAD;
+        }
     }
 
     @Override

@@ -35,6 +35,12 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/telran/cars/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>
@@ -59,6 +65,11 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>2.9.2</version>
@@ -78,5 +89,40 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+     
+
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>mysql</id>
+            <properties>
+                <spring.profiles.active>mysql</spring.profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.46</version>
+            </dependency>
+           </dependencies>
+        </profile>
+        <profile>
+            <id>h2</id>
+            <properties>
+                <spring.profiles.active>h2</spring.profiles.active>
+            </properties>
+            <dependencies>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.197</version>
+                <scope>test</scope>
+            </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

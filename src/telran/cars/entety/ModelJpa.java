@@ -1,6 +1,8 @@
 package telran.cars.entety;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 /**
@@ -13,10 +15,14 @@ public class ModelJpa {
     @Id
     @Column(name = "model_name")
     private String modelName;
+    @Min(0)
     private int gasTank;
+    @NotBlank
     private String company;
+    @NotBlank
     private String country;
     @Column(name = "price_day")
+    @Min(0)
     private int priceDay;
 
 

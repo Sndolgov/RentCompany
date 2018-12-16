@@ -1,6 +1,10 @@
 package telran.cars.entety;
 
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -9,16 +13,22 @@ import java.util.Set;
 @Table(name = "drivers")
 @Entity
 public class DriverJpa {
+
+    private final static  long MIN_BIRTH_YEAR= LocalDate.now().getYear()-70;
+    private static final int MAX_BIRTH_YEAR= LocalDate.now().getYear();
+
     @Id
     @Column(name = "license_id")
+    @Min(0)
     private long licenseId;
+    @NotBlank
     private String name;
     @Column(name = "birth_year")
     private int birthYear;
+    @NotBlank
     private String phone;
-
-    @OneToMany(mappedBy = "driver")
-    private Set<RentRecordsJpa> records;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.REMOVE)
+    private Set<RentRecordJpa> records;
 
     public DriverJpa() {
     }
@@ -46,7 +56,7 @@ public class DriverJpa {
         return phone;
     }
 
-    public Set<RentRecordsJpa> getRecords() {
+    public Set<RentRecordJpa> getRecords() {
         return records;
     }
 
