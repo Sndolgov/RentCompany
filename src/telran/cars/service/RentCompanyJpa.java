@@ -140,8 +140,7 @@ public class RentCompanyJpa extends AbstractRentCompany implements IRentCompany 
         if (code != CarsReturnCode.OK)
             return code;
         updateRecord(record, car, returnDate, gasTankPercent, damages);
-        setCarDamages(damages);
-
+        setCarDamages(car, damages);
         return CarsReturnCode.OK;
     }
 
